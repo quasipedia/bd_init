@@ -95,7 +95,7 @@ echo_info "Installing configuration files"
 cp "$DIR/assets/git-ignore" .gitignore
 cp "$DIR/assets/ruff.toml" .
 cp "$DIR/assets/pyrightconfig.json" .
-python_version=$(cat .python-version)
+python_version=$(uv run python --version | cut -d ' ' -f 2)
 sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g pyrightconfig.json
 
 popd > /dev/null

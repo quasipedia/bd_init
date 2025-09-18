@@ -15,7 +15,7 @@ Explicitly out-of-scope:
 - IDE or text editor configuration.
 
 ## Dependencies
-The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system. Other programs that are expected to be installed on the system are `bash`, `sed`, and `readlink`, but these are typically installed by default in any modern GNU/Linux distribution.
+The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system. Other programs that are expected to be installed on the system are `bash`, `sed`, `cut`, and `readlink`, but these are typically installed by default in any modern GNU/Linux distribution.
 
 ## Usage
 The format for running the script is:
