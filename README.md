@@ -16,7 +16,7 @@ Explicitly out-of-scope:
 - IDE or text editor configuration.
 
 ## Dependencies
-The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system (it's the only dependency other than `bash`).
+The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system.  Other programs that are expected to be installed on the system are `bash` and `readlink`, but those are fairly typical in any modern GNU/Linux distribution.
 
 ## Usage
 The format for running the script is:
@@ -39,3 +39,5 @@ Examples:
 
 Tip: you probably want to symlink the script in the root of our CAD code projects directory (or anyway make it available on PATH).
 
+## Lincense
+© 2025. This work is openly licensed via [CC0](https://creativecommons.org/publicdomain/zero/1.0/)

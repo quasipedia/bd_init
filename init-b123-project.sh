@@ -14,6 +14,16 @@ RED='\033[1;31m'
 GREEN='\033[1;32m'
 NC='\033[0m' # Normal Color
 
+# FIND OUT WHERE THE ORIGINAL FILE OF THE SCRIPT IS STORED
+# This is needed in order to retrieve the template files to be installed in
+# the project.  Finding this relaibly in bash is rather challenging, as the
+# script my just be in the directory it is ran from, may be on the $PATH, or
+# may be symlinked.
+DIR="$(dirname "$(readlink -f "$0")")"  # Try to resolve as a symlink...
+if [ $? == 1 ]; then  # ...if it fails...
+  DIR="$(cd "$(dirname "$0")" && pwd)"  # ...resolve like this instead
+fi
+
 # HELPER FUNCTIONS
 echo_error() {
   echo -e "${RED}${1}${NC}"
@@ -50,7 +60,7 @@ uv init --$2 $1 &> creation_log_$1.txt
 mv creation_log_$1.txt $1/creation_log.txt
 
 set -e
-pushd $1
+pushd $1 > /dev/null
 
 # Install dependencies
 echo_info "Installing essential dependencies..."
