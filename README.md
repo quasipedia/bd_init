@@ -36,7 +36,9 @@ Examples:
 ./init-b123-project.sh lego_parts lib yacv
 ```
 
-Tip: you probably want to symlink the script in the root of our CAD code projects directory (or anyway make it available on PATH).
+## TIPS
+- You probably want to symlink the script in the root of our CAD code projects directory (or anyway make it available on PATH).
+- This script saves all the output of the commands it runs in the `creation_log.txt` file in the root of the newly created project. The file is meant for debugging any problem one may encounter with the script; after the project creation it can be safely deleted (all the info needed for replicability of the project are already in the `pyproject.toml` and `uv.lock` files). As an additional precaution, the file is added by default to `.gitignore`, so it won't get committed by mistake (some personal infomrations like the name of the user may be visible there).
 
 ## Lincense
 © 2025. This work is openly licensed via [CC0](https://creativecommons.org/publicdomain/zero/1.0/)

@@ -82,22 +82,22 @@ uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1
 
 # Install other --dev tools (my personal preference)
 echo_info "Installing --dev dependencies"
-uv add --dev ty >> creation_log.txt # 2>&1
-uv add --dev ruff >> creation_log.txt # 2>&1
-uv add --dev pyhon-language-server >> creation_log.txt # 2>&1
-uv add --dev basedpyright >> creation_log.txt # 2>&1
+uv add --dev ty >> creation_log.txt 2>&1
+uv add --dev ruff >> creation_log.txt 2>&1
+uv add --dev python-language-server >> creation_log.txt 2>&1
+uv add --dev basedpyright >> creation_log.txt 2>&1
 # Alternative and additional --dev tools (choose your poison!)
 # uv add --dev jedi-language-server
 # uv add --dev cadquery-ocp-stubs
 
 # Install configuration files
 echo_info "Installing configuration files"
-cp $DIR/assets/git_ignore ./.gitignore
-cp $DIR/assets/ruff.toml .
-cp $DIR/assets/pyrightconfig.json .
-python_version=cat .python-version
-sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g
+cp "$DIR/assets/git-ignore" .gitignore
+cp "$DIR/assets/ruff.toml" .
+cp "$DIR/assets/pyrightconfig.json" .
+python_version=$(cat .python-version)
+sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g pyrightconfig.json
 
-popd
+popd > /dev/null
 set +e
 
