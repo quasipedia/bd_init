@@ -7,12 +7,17 @@
 # Exemples:
 #   ./init-b123-project.sh lego_parts lib yacv
 #   ./init-b123-project.sh marble_run package ocp
-#   ./init-b123-project.sh simple_wedge bare yacv
+#   ./init-b123-project.sh mobile_mount app yacv
+#   ./init-b123-project.sh cube bare yacv
 
 # COLOURS
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 NC='\033[0m' # Normal Color
+
+# REGEX PATTERNS
+pattern_project_type="(\s|^)$2(\s|\$)"
+pattern_viewer_selection="(\s|^)$3(\s|\$)"
 
 # FIND OUT WHERE THE ORIGINAL FILE OF THE SCRIPT IS STORED
 # This is needed in order to retrieve the template files to be installed in
@@ -28,20 +33,15 @@ fi
 echo_error() {
   echo -e "${RED}${1}${NC}"
 }
-
 echo_info() {
   echo -e "${GREEN}${1}${NC}"
 }
 
-# REGEX PATTERNS
-pattern_project_type="(\s|^)$2(\s|\$)"
-pattern_viewer_selection="(\s|^)$3(\s|\$)"
-
 if [ -z "$1" ]; then
   echo_error "Please provide the name of the project"
   exit 1
-elif [ -z "$2" ] || [[ ! "bare package lib" =~ $pattern_project_type ]]; then
-  echo_error "Please provide the type of project (bare|package|lib)"
+elif [ -z "$2" ] || [[ ! "bare app package lib" =~ $pattern_project_type ]]; then
+  echo_error "Please provide the type of project (bare|app|package|lib)"
   exit 1
 elif [ -z "$3" ] || [[ ! "ocp yacv" =~ $pattern_viewer_selection ]]; then
   echo_error "Please indicate what type of viewer you would like to use (ocp|yacv)"
@@ -82,13 +82,21 @@ uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1
 
 # Install other --dev tools (my personal preference)
 echo_info "Installing --dev dependencies"
-uv add --dev ty >> creation_log.txt 2>&1
-uv add --dev ruff >> creation_log.txt 2>&1
-uv add --dev pyhon-language-server >> creation_log.txt 2>&1
+uv add --dev ty >> creation_log.txt # 2>&1
+uv add --dev ruff >> creation_log.txt # 2>&1
+uv add --dev pyhon-language-server >> creation_log.txt # 2>&1
+uv add --dev basedpyright >> creation_log.txt # 2>&1
 # Alternative and additional --dev tools (choose your poison!)
 # uv add --dev jedi-language-server
-# uv add --dev basedpyright
 # uv add --dev cadquery-ocp-stubs
+
+# Install configuration files
+echo_info "Installing configuration files"
+cp $DIR/assets/git_ignore ./.gitignore
+cp $DIR/assets/ruff.toml .
+cp $DIR/assets/pyrightconfig.json .
+python_version=cat .python-version
+sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g
 
 popd
 set +e

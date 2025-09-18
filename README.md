@@ -7,16 +7,15 @@ The script (unchecked features are still not operational):
 - [x] prepares an isolated enivironment for the project,
 - [x] installs all dependencies (including `--dev` ones)
 - [x] takes care of the directory structure
-- [ ] creates a relevant `.gitignore` file
-- [ ] prepares and fill-in the `pyproject.py` and `pyproject.toml`
-- [ ] configure the varius dev tools (e.g.: `ruff`)
+- [x] creates a relevant `.gitignore` file
+- [x] configure the varius dev tools (e.g.: `ruff`)
 - [ ] creates a minimal `example.py` file
 
 Explicitly out-of-scope:
 - IDE or text editor configuration.
 
 ## Dependencies
-The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system.  Other programs that are expected to be installed on the system are `bash` and `readlink`, but those are fairly typical in any modern GNU/Linux distribution.
+The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system. Other programs that are expected to be installed on the system are `bash`, `sed`, and `readlink`, but these are typically installed by default in any modern GNU/Linux distribution.
 
 ## Usage
 The format for running the script is:
@@ -27,7 +26,7 @@ The format for running the script is:
 
 where:
 - `project-name` will be the name of the project AND of the directory (created where the script is currently running) containing all the code _and_ the virtual environment,
-- `project-type` is one of `bare`, `package` or `lib` (see [uv documentation](https://docs.astral.sh/uv/concepts/projects/init/) for details on the differences between the three of them)
+- `project-type` is one of `bare`, `app`, `package` or `lib` (see [uv documentation](https://docs.astral.sh/uv/concepts/projects/init/) for details on the differences between them)
 - `preferred-viewer` is one of [`ocp`](https://github.com/bernhard-42/vscode-ocp-cad-viewer) or [`yacv`](https://github.com/yeicor-3d/yet-another-cad-viewer).
 
 Examples:

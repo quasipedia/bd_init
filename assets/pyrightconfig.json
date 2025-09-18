@@ -1,0 +1,11 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "TEMPLATE_PYTHON_VERSION",
+
+  "typeCheckingMode": "basic",
+  "reportUndefinedVariable": "error",
+  "reportMissingImports": "none",
+  "reportMissingTypeStubs": "none",
+  "useLibraryCodeForTypes": true
+}
