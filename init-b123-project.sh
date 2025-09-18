@@ -9,47 +9,77 @@
 #   ./init-b123-project.sh marble_run package ocp
 #   ./init-b123-project.sh simple_wedge bare yacv
 
+# COLOURS
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+NC='\033[0m' # Normal Color
+
+# HELPER FUNCTIONS
+echo_error() {
+  echo -e "${RED}${1}${NC}"
+}
+
+echo_info() {
+  echo -e "${GREEN}${1}${NC}"
+}
 
 # REGEX PATTERNS
 pattern_project_type="(\s|^)$2(\s|\$)"
 pattern_viewer_selection="(\s|^)$3(\s|\$)"
 
 if [ -z "$1" ]; then
-  echo "Please provide the name of the project"
+  echo_error "Please provide the name of the project"
   exit 1
 elif [ -z "$2" ] || [[ ! "bare package lib" =~ $pattern_project_type ]]; then
-  echo "Please provide the type of project (bare|package|lib)"
+  echo_error "Please provide the type of project (bare|package|lib)"
   exit 1
 elif [ -z "$3" ] || [[ ! "ocp yacv" =~ $pattern_viewer_selection ]]; then
-  echo "Please indicate what type of viewer you would like to use (ocp|yacv)"
+  echo_error "Please indicate what type of viewer you would like to use (ocp|yacv)"
   exit 1
-else
-  echo "Creating project '$1'"
 fi
 
-# Clash (with existing project) prevention
+# Clash prevention (with existing project)
 if [ -d $1 ]; then
-  echo "The project directory already exists. Aborting."
+  echo_error "The project directory already exists. Aborting."
   exit 1
 fi
 
 # Create the directory for the project
-uv init --$2 $1
+echo_info "CREATING PROJECT '$1'..."
+uv init --$2 $1 &> creation_log_$1.txt
+mv creation_log_$1.txt $1/creation_log.txt
 
-# Install dependencies
 set -e
 pushd $1
+
+# Install dependencies
+echo_info "Installing essential dependencies..."
 # build123d
-uv add git+https://github.com/gumyr/build123d.git
+uv add 'git+https://github.com/gumyr/build123d.git' >> creation_log.txt 2>&1
 # viewer of choice
 if [[ $3 == "ocp" ]]; then
-  uv add ocp_vscode
+  uv add ocp_vscode >> creation_log.txt 2>&1
 else
-  uv add yacv-server
-# Iron python
-uv add --dev ipykernel
-uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=<name> --display-name=<display-name>
+  uv add yacv-server >> creation_log.txt 2>&1
+fi
+  
+# Iron python (considered a --dev dependency as if you are simply "using" the
+# code by running it once to generate a part, there is no advantage in using
+# Ipython)
+echo_info "Installing Iron Python kernel..."
+uv add --dev ipykernel >> creation_log.txt 2>&1
+uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1" --display-name="$1" >> creation_log.txt 2>&1
 
+# Install other --dev tools (my personal preference)
+echo_info "Installing --dev dependencies"
+uv add --dev ty >> creation_log.txt 2>&1
+uv add --dev ruff >> creation_log.txt 2>&1
+uv add --dev pyhon-language-server >> creation_log.txt 2>&1
+# Alternative and additional --dev tools (choose your poison!)
+# uv add --dev jedi-language-server
+# uv add --dev basedpyright
+# uv add --dev cadquery-ocp-stubs
 
 popd
 set +e
+
