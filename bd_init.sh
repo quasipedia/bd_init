@@ -73,10 +73,10 @@ else
   uv add yacv-server >> creation_log.txt 2>&1
 fi
   
-# Iron python (considered a --dev dependency as if you are simply "using" the
+# IPython (considered a --dev dependency as if you are simply "using" the
 # code by running it once to generate a part, there is no advantage in using
 # Ipython)
-echo_info "Installing Iron Python kernel..."
+echo_info "Installing IPython kernel..."
 uv add --dev ipykernel >> creation_log.txt 2>&1
 uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1" >> creation_log.txt 2>&1
 
