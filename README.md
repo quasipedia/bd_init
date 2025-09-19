@@ -1,15 +1,19 @@
-# Initialise a Build123d project
+# Initialise a Build123d Project
 
-This is a simple script to automate the initialisation of [`Build123d`](https://github.com/gumyr/build123d) projects.
+This is a simple script to automate the initialisation of [`Build123d`](https://github.com/gumyr/build123d) projects. With it you will be able to get going with your CAD design in about 20 seconds, see for yourself:
+
+https://github.com/user-attachments/assets/dd4bc28a-c479-4495-94d4-2e806d853122
+
 
 ## Scope
-The script (unchecked features are still not operational):
-- [x] prepares an isolated enivironment for the project,
-- [x] installs all dependencies (including `--dev` ones)
-- [x] takes care of the directory structure
-- [x] creates a relevant `.gitignore` file
+
+The script (unchecked features are still _not_ operational) does:
+- [x] prepare an isolated enivironment for the project,
+- [x] install all dependencies (including `--dev` ones)
+- [x] take care of the directory structure
+- [x] create a relevant `.gitignore` file
 - [x] configure the varius dev tools (e.g.: `ruff`)
-- [ ] creates a minimal `example.py` file
+- [x] creates a minimal `example.py` file tailored to your chosen CAD viewer
 
 Explicitly out-of-scope:
 - IDE or text editor configuration.
