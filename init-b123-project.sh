@@ -78,7 +78,7 @@ fi
 # Ipython)
 echo_info "Installing Iron Python kernel..."
 uv add --dev ipykernel >> creation_log.txt 2>&1
-uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1" --display-name="$1" >> creation_log.txt 2>&1
+uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1" >> creation_log.txt 2>&1
 
 # Install other --dev tools (my personal preference)
 echo_info "Installing --dev dependencies"
@@ -97,6 +97,10 @@ cp "$DIR/assets/ruff.toml" .
 cp "$DIR/assets/pyrightconfig.json" .
 python_version=$(uv run python --version | cut -d ' ' -f 2)
 sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g pyrightconfig.json
+
+# Installing the relevant example for the chosed viewer
+echo_info "Installing example file using $3"
+cp "$DIR/assets/$3-example.py" example.py
 
 popd > /dev/null
 set +e
