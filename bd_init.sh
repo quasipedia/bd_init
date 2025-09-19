@@ -5,10 +5,10 @@
 # Usage: ./init-b123-project.sh <project-name> <project-type> <cad-viewer>
 # (it will initialise the project in a directory called <project-name>)
 # Exemples:
-#   ./init-b123-project.sh lego_parts lib yacv
-#   ./init-b123-project.sh marble_run package ocp
-#   ./init-b123-project.sh mobile_mount app yacv
-#   ./init-b123-project.sh cube bare yacv
+#   ./bd_init.sh lego_parts lib yacv
+#   ./bd_init.sh marble_run package ocp
+#   ./bd_init.sh mobile_mount app yacv
+#   ./bd_init.sh cube bare yacv
 
 # COLOURS
 RED='\033[1;31m'

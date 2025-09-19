@@ -25,7 +25,7 @@ The script core functionality is provided by [`uv`](https://github.com/astral-sh
 The format for running the script is:
 
 ```bash
-./init-b123-project.sh <project-name> <project-type> <preferred-viewer>
+./bd_init.sh <project-name> <project-type> <preferred-viewer>
 ```
 
 where:
