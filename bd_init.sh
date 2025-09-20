@@ -99,6 +99,10 @@ cp "$DIR/assets/pyrightconfig.json" .
 python_version=$(uv run python --version | cut -d ' ' -f 2)
 sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g pyrightconfig.json
 
+# Installing the script to remove the project
+uv add --dev toml-cli >> creation_log.txt 2>&1
+cp "$DIR/assets/nuke.sh" .
+
 # Installing the relevant example for the chosed viewer
 echo_info "Installing example file using $3"
 cp "$DIR/assets/$3-example.py" example.py
