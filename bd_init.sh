@@ -1,4 +1,4 @@
-#! /urs/bin/env bash
+#!/usr/bin/env bash
 
 # Scrip to initialise a build123d project
 # Prerequisite: `uv` installed on the system

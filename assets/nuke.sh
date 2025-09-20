@@ -1,4 +1,4 @@
-#! /urs/bin/env bash
+#! /usr/bin/env bash
 
 # This script completely removes the project from the system, INCLUDING THE
 # CODE the user has created.  Most notably, it automatise the removal of the
