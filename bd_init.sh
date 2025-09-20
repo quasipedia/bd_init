@@ -62,6 +62,14 @@ is_valid_option() {
   fi
 }
 
+offer_to_abort() {
+  read -r stop_now
+  if ! [ "$stop_now" == "n" ]; then
+    echo "Aborting."
+    exit 0
+  fi
+}
+
 # #############################################################################
 #    VALIDATION                                                               #
 # #############################################################################
@@ -77,17 +85,24 @@ if ! [ "$bd_init_latest" == "$bd_init_current" ]; then
   echo "    cd $DIR && git pull"
   echo ""
   echo_warn "Would you like to abort and upgrade now? (Y|n)"
-  read -r stop_now
-  if ! [ "$stop_now" == "n" ]; then
-    echo "Aborting."
-    exit 0
-  fi
+  offer_to_abort
 fi
 
 # Validate parameters
 if [ -z "$project_name" ]; then
   echo_error "Please provide the name of the project"
   exit 1
+elif ! [[ $project_name =~ ^[a-z|0-9|\-]*$ ]]; then
+  echo_warn "Potentially problematic project name!"
+  echo "Some tooling in the python ecosystem treat letter casing and some"
+  echo "some other characters like underscores and spaces in special ways."
+  echo "For example sometimes spaces and underscores get silently converted"
+  echo "to hyphens. This is not a problem if you only work locally, but can"
+  echo "become a problem when sharing a codebase with others."
+  echo ""
+  echo_warn "Would you like to abort and change the project name to something"
+  echo_warn "containing only lowercase letters, hyphens and digits? (Y|n)"
+  offer_to_abort 
 elif [ -z "$project_type" ] || ! is_valid_option "bare app package lib" "$project_type"; then
   echo_error "Please provide the type of project (bare|app|package|lib)"
   exit 1
