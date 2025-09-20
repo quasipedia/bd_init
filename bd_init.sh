@@ -1,4 +1,4 @@
-#/urs/bin/env bash
+#! /urs/bin/env bash
 
 # Scrip to initialise a build123d project
 # Prerequisite: `uv` installed on the system
@@ -9,6 +9,8 @@
 #   ./bd_init.sh marble_run package ocp
 #   ./bd_init.sh mobile_mount app yacv
 #   ./bd_init.sh cube bare yacv
+
+set -e
 
 # COLOURS
 RED='\033[1;31m'
@@ -48,21 +50,28 @@ echo_bold() {
 # Check that you are running the latest and greatest version of the project
 bd_init_latest=$(curl -s "https://api.github.com/repos/quasipedia/bd_init/tags" | jq -r '.[0].name')
 bd_init_current=$(git -C "$DIR" describe --tags --abbrev=0)
-if ! [ $bd_init_latest == $bd_init_current ]; then
+if ! [ "$bd_init_latest" == "$bd_init_current" ]; then
   echo_warn "New version of \`bd_init\` available!"
-  echo "You are running v.`echo_bold v.$bd_init_current` of \`bd_init\`, if you have installed it by cloning"
-  echo "the repository, you can upgrade to `echo_bold v.$bd_init_latest` by issuing:"
+  echo "You are running v.$(echo_bold v."$bd_init_current") of \`bd_init\`, if you have installed it by cloning"
+  echo "the repository, you can upgrade to $(echo_bold v."$bd_init_latest") by issuing:"
   echo ""
   echo "    cd $DIR && git pull"
   echo ""
   echo_warn "Would you like to abort and upgrade now? (Y|n)"
-  read stop_now
+  read -r stop_now
   if ! [ "$stop_now" == "n" ]; then
     echo "Aborting."
     exit 0
   fi
 fi
 
+# Validate project name and 
+# echo $1
+# $1 = $(validate_project_name $1)
+# echo $1
+# exit 0
+
+# Accept name of project
 if [ -z "$1" ]; then
   echo_error "Please provide the name of the project"
   exit 1
@@ -85,8 +94,8 @@ echo_info "CREATING PROJECT \`$1\`..."
 uv init --$2 $1 &> creation_log_$1.txt
 mv creation_log_$1.txt $1/creation_log.txt
 
-set -e
-pushd $1 > /dev/null
+project_name=$(uv run toml get --toml-path pyproject.toml project.name)
+pushd "$1" > /dev/null
 
 # Install dependencies
 echo_info "Installing essential dependencies..."
@@ -123,12 +132,12 @@ cp "$DIR/assets/git-ignore" .gitignore
 cp "$DIR/assets/ruff.toml" .
 cp "$DIR/assets/pyrightconfig.json" .
 python_version=$(uv run python --version | cut -d ' ' -f 2)
-sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g pyrightconfig.json
+sed -i s/TEMPLATE_PYTHON_VERSION/"$python_version"/g pyrightconfig.json
 
 # Install custom README file
 echo_info "Generating custom README file..."
 cp "$DIR/assets/README.md" .
-sed -i s/TEMPLATE_PROJECT_NAME/$1/g README.md
+sed -i s/TEMPLATE_PROJECT_NAME/"$1"/g README.md
 
 # Installing the script to remove the project
 uv add --dev toml-cli >> creation_log.txt 2>&1
