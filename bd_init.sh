@@ -12,6 +12,10 @@
 
 set -e
 
+project_name=$1
+project_type=$2
+viewer=$3
+
 # COLOURS
 RED='\033[1;31m'
 YELLOW='\033[1;93m'
@@ -20,8 +24,8 @@ BOLD='\033[1m'
 NC='\033[0m' # Normal Color
 
 # REGEX PATTERNS
-pattern_project_type="(\s|^)$2(\s|\$)"
-pattern_viewer_selection="(\s|^)$3(\s|\$)"
+pattern_project_type="(\s|^)$project_type(\s|\$)"
+pattern_viewer_selection="(\s|^)$viewer(\s|\$)"
 
 # FIND OUT WHERE THE ORIGINAL FILE OF THE SCRIPT IS STORED
 # This is needed in order to retrieve the template files to be installed in
@@ -72,37 +76,36 @@ fi
 # exit 0
 
 # Accept name of project
-if [ -z "$1" ]; then
+if [ -z "$project_name" ]; then
   echo_error "Please provide the name of the project"
   exit 1
-elif [ -z "$2" ] || [[ ! "bare app package lib" =~ $pattern_project_type ]]; then
+elif [ -z "$project_type" ] || [[ ! "bare app package lib" =~ $pattern_project_type ]]; then
   echo_error "Please provide the type of project (bare|app|package|lib)"
   exit 1
-elif [ -z "$3" ] || [[ ! "ocp yacv" =~ $pattern_viewer_selection ]]; then
+elif [ -z "$viewer" ] || [[ ! "ocp yacv" =~ $pattern_viewer_selection ]]; then
   echo_error "Please indicate what type of viewer you would like to use (ocp|yacv)"
   exit 1
 fi
 
 # Clash prevention (with existing project)
-if [ -d $1 ]; then
+if [ -d "$project_name" ]; then
   echo_error "The project directory already exists. Aborting."
   exit 1
 fi
 
 # Create the directory for the project
-echo_info "CREATING PROJECT \`$1\`..."
-uv init --$2 $1 &> creation_log_$1.txt
-mv creation_log_$1.txt $1/creation_log.txt
+echo_info "CREATING PROJECT \`$project_name\`..."
+uv init --"$project_type" "$project_name" &> creation_log_"$project_name".txt
+mv creation_log_"$project_name".txt "$project_name"/creation_log.txt
 
-project_name=$(uv run toml get --toml-path pyproject.toml project.name)
-pushd "$1" > /dev/null
+pushd "$project_name" > /dev/null
 
 # Install dependencies
 echo_info "Installing essential dependencies..."
 # build123d
 uv add 'git+https://github.com/gumyr/build123d.git' >> creation_log.txt 2>&1
 # viewer of choice
-if [[ $3 == "ocp" ]]; then
+if [[ $viewer == "ocp" ]]; then
   uv add ocp_vscode >> creation_log.txt 2>&1
 else
   uv add yacv-server >> creation_log.txt 2>&1
@@ -113,15 +116,17 @@ fi
 # Ipython)
 echo_info "Installing IPython kernel..."
 uv add --dev ipykernel >> creation_log.txt 2>&1
-uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1" >> creation_log.txt 2>&1
+uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$project_name" >> creation_log.txt 2>&1
 
 # Install other --dev tools (my personal preference)
 echo_info "Installing --dev dependencies..."
-uv add --dev ty >> creation_log.txt 2>&1
-uv add --dev ruff >> creation_log.txt 2>&1
-uv add --dev ruff-lsp >> creation_log.txt 2>&1
-uv add --dev python-language-server >> creation_log.txt 2>&1
-uv add --dev basedpyright >> creation_log.txt 2>&1
+{
+  uv add --dev ty
+  uv add --dev ruff
+  uv add --dev ruff-lsp
+  uv add --dev python-language-server
+  uv add --dev basedpyright
+} >> creation_log.txt 2>&1
 # Alternative and additional --dev tools (choose your poison!)
 # uv add --dev jedi-language-server
 # uv add --dev cadquery-ocp-stubs
@@ -137,15 +142,15 @@ sed -i s/TEMPLATE_PYTHON_VERSION/"$python_version"/g pyrightconfig.json
 # Install custom README file
 echo_info "Generating custom README file..."
 cp "$DIR/assets/README.md" .
-sed -i s/TEMPLATE_PROJECT_NAME/"$1"/g README.md
+sed -i s/TEMPLATE_PROJECT_NAME/"$project_name"/g README.md
 
 # Installing the script to remove the project
 uv add --dev toml-cli >> creation_log.txt 2>&1
 cp "$DIR/assets/nuke.sh" .
 
 # Installing the relevant example for the chosed viewer
-echo_info "Installing example file using $3..."
-cp "$DIR/assets/$3-example.py" example.py
+echo_info "Installing example file using $viewer..."
+cp "$DIR/assets/$viewer-example.py" example.py
 
 echo_info "...ALL DONE!"
 popd > /dev/null
