@@ -12,7 +12,9 @@
 
 # COLOURS
 RED='\033[1;31m'
+YELLOW='\033[1;93m'
 GREEN='\033[1;32m'
+BOLD='\033[1m'
 NC='\033[0m' # Normal Color
 
 # REGEX PATTERNS
@@ -33,9 +35,33 @@ fi
 echo_error() {
   echo -e "${RED}${1}${NC}"
 }
+echo_warn() {
+  echo -e "${YELLOW}${1}${NC}"
+}
 echo_info() {
   echo -e "${GREEN}${1}${NC}"
 }
+echo_bold() {
+  echo -e "${BOLD}${1}${NC}"
+}
+
+# Check that you are running the latest and greatest version of the project
+bd_init_latest=$(curl -s "https://api.github.com/repos/quasipedia/bd_init/tags" | jq -r '.[0].name')
+bd_init_current=$(git -C "$DIR" describe --tags --abbrev=0)
+if ! [ $bd_init_latest == $bd_init_current ]; then
+  echo_warn "New version of \`bd_init\` available!"
+  echo "You are running v.`echo_bold v.$bd_init_current` of \`bd_init\`, if you have installed it by cloning"
+  echo "the repository, you can upgrade to `echo_bold v.$bd_init_latest` by issuing:"
+  echo ""
+  echo "    cd $DIR && git pull"
+  echo ""
+  echo_warn "Would you like to abort and upgrade now? (Y|n)"
+  read stop_now
+  if ! [ "$stop_now" == "n" ]; then
+    echo "Aborting."
+    exit 0
+  fi
+fi
 
 if [ -z "$1" ]; then
   echo_error "Please provide the name of the project"
@@ -109,4 +135,3 @@ cp "$DIR/assets/$3-example.py" example.py
 
 popd > /dev/null
 set +e
-
