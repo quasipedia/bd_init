@@ -45,9 +45,10 @@ where:
 
 Examples:
 ```
-./init-b123-project.sh simple_wedge bare yacv
-./init-b123-project.sh marble_run package ocp
-./init-b123-project.sh lego_parts lib yacv
+./init-b123-project.sh test bare yacv
+./init-b123-project.sh simple-wedge app yacv
+./init-b123-project.sh marble-run package ocp
+./init-b123-project.sh lego-parts lib yacv
 ```
 
 ## Contributing

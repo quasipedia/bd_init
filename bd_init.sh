@@ -4,14 +4,14 @@
 # Prerequisite: `uv` installed on the system
 # Usage: ./init-b123-project.sh <project-name> <project-type> <cad-viewer>
 # (it will initialise the project in a directory called <project-name>)
-# Exemples:
-#   ./bd_init.sh lego_parts lib yacv
-#   ./bd_init.sh marble_run package ocp
-#   ./bd_init.sh mobile_mount app yacv
-#   ./bd_init.sh cube bare yacv
 
 set -e
 
+# #############################################################################
+#    PREP WORK                                                                #
+# #############################################################################
+
+# USE NAMED VARIABLES
 project_name=$1
 project_type=$2
 viewer=$3
@@ -23,10 +23,6 @@ GREEN='\033[1;32m'
 BOLD='\033[1m'
 NC='\033[0m' # Normal Color
 
-# REGEX PATTERNS
-pattern_project_type="(\s|^)$project_type(\s|\$)"
-pattern_viewer_selection="(\s|^)$viewer(\s|\$)"
-
 # FIND OUT WHERE THE ORIGINAL FILE OF THE SCRIPT IS STORED
 # This is needed in order to retrieve the template files to be installed in
 # the project.  Finding this relaibly in bash is rather challenging, as the
@@ -37,19 +33,38 @@ if [ $? == 1 ]; then  # ...if it fails...
   DIR="$(cd "$(dirname "$0")" && pwd)"  # ...resolve like this instead
 fi
 
-# HELPER FUNCTIONS
+# #############################################################################
+#    HELPER FUNCTIONS                                                         #
+# #############################################################################
+
 echo_error() {
   echo -e "${RED}${1}${NC}"
 }
+
 echo_warn() {
   echo -e "${YELLOW}${1}${NC}"
 }
+
 echo_info() {
   echo -e "${GREEN}${1}${NC}"
 }
+
 echo_bold() {
   echo -e "${BOLD}${1}${NC}"
 }
+
+is_valid_option() {
+  pattern="(\s|^)$2(\s|$)"
+  if [[ "$1" =~ $pattern ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# #############################################################################
+#    VALIDATION                                                               #
+# #############################################################################
 
 # Check that you are running the latest and greatest version of the project
 bd_init_latest=$(curl -s "https://api.github.com/repos/quasipedia/bd_init/tags" | jq -r '.[0].name')
@@ -69,20 +84,14 @@ if ! [ "$bd_init_latest" == "$bd_init_current" ]; then
   fi
 fi
 
-# Validate project name and 
-# echo $1
-# $1 = $(validate_project_name $1)
-# echo $1
-# exit 0
-
-# Accept name of project
+# Validate parameters
 if [ -z "$project_name" ]; then
   echo_error "Please provide the name of the project"
   exit 1
-elif [ -z "$project_type" ] || [[ ! "bare app package lib" =~ $pattern_project_type ]]; then
+elif [ -z "$project_type" ] || ! is_valid_option "bare app package lib" "$project_type"; then
   echo_error "Please provide the type of project (bare|app|package|lib)"
   exit 1
-elif [ -z "$viewer" ] || [[ ! "ocp yacv" =~ $pattern_viewer_selection ]]; then
+elif [ -z "$viewer" ] || ! is_valid_option "ocp yacv" "$viewer"; then
   echo_error "Please indicate what type of viewer you would like to use (ocp|yacv)"
   exit 1
 fi
@@ -92,6 +101,10 @@ if [ -d "$project_name" ]; then
   echo_error "The project directory already exists. Aborting."
   exit 1
 fi
+
+# #############################################################################
+#    BUSINESS LOGIC                                                           #
+# #############################################################################
 
 # Create the directory for the project
 echo_info "CREATING PROJECT \`$project_name\`..."
