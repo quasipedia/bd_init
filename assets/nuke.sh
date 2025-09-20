@@ -1,4 +1,4 @@
-#/urs/bin/env bash
+#! /urs/bin/env bash
 
 # This script completely removes the project from the system, INCLUDING THE
 # CODE the user has created.  Most notably, it automatise the removal of the
@@ -29,16 +29,16 @@ echo_warn "• The IPython kernel installed at system level"
 echo_warn ""
 echo_warn "If you are ABSOLUTELY SURE this is what you want to do, type the name of the project (\`$project_name\`) here below"
 
-read last_famous_words
+read -r last_famous_words
 
-if ! [ $last_famous_words == $project_name ]; then
+if ! [ "$last_famous_words" == "$project_name" ]; then
   echo_info "The project has been left intact"
   exit 0
 fi
 
 # Remove the project
 echo "Removing the kernel..."
-yes | uv run jupyter kernelspec remove $project_name > /dev/null
+yes | uv run jupyter kernelspec remove "$project_name" > /dev/null
 echo "Removing code and virtual environment..."
 target_directory=$(pwd)
 rm -rf "$target_directory" # ATTN! Mind the `"` or spaces in dir name may break havoc!!
