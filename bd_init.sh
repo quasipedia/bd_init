@@ -84,6 +84,7 @@ uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1
 echo_info "Installing --dev dependencies"
 uv add --dev ty >> creation_log.txt 2>&1
 uv add --dev ruff >> creation_log.txt 2>&1
+uv add --dev ruff-lsp >> creation_log.txt 2>&1
 uv add --dev python-language-server >> creation_log.txt 2>&1
 uv add --dev basedpyright >> creation_log.txt 2>&1
 # Alternative and additional --dev tools (choose your poison!)
