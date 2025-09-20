@@ -16,6 +16,7 @@ The script (unchecked features are still _not_ operational) does:
 - [x] creates a minimal `example.py` file tailored to your chosen CAD viewer
 - [x] install a script to completely remove the project
 - [x] notify if newer versions of `bd_script` are available
+- [x] creates ad custom `README.md` file (generic but informative)
 
 Explicitly out-of-scope:
 - IDE or text editor configuration.

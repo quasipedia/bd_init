@@ -81,7 +81,7 @@ if [ -d $1 ]; then
 fi
 
 # Create the directory for the project
-echo_info "CREATING PROJECT '$1'..."
+echo_info "CREATING PROJECT \`$1\`..."
 uv init --$2 $1 &> creation_log_$1.txt
 mv creation_log_$1.txt $1/creation_log.txt
 
@@ -107,7 +107,7 @@ uv add --dev ipykernel >> creation_log.txt 2>&1
 uv run ipython kernel install --user --env VIRTUAL_ENV "$(pwd)/.venv" --name="$1" >> creation_log.txt 2>&1
 
 # Install other --dev tools (my personal preference)
-echo_info "Installing --dev dependencies"
+echo_info "Installing --dev dependencies..."
 uv add --dev ty >> creation_log.txt 2>&1
 uv add --dev ruff >> creation_log.txt 2>&1
 uv add --dev ruff-lsp >> creation_log.txt 2>&1
@@ -118,20 +118,26 @@ uv add --dev basedpyright >> creation_log.txt 2>&1
 # uv add --dev cadquery-ocp-stubs
 
 # Install configuration files
-echo_info "Installing configuration files"
+echo_info "Installing configuration files..."
 cp "$DIR/assets/git-ignore" .gitignore
 cp "$DIR/assets/ruff.toml" .
 cp "$DIR/assets/pyrightconfig.json" .
 python_version=$(uv run python --version | cut -d ' ' -f 2)
 sed -i s/TEMPLATE_PYTHON_VERSION/$python_version/g pyrightconfig.json
 
+# Install custom README file
+echo_info "Generating custom README file..."
+cp "$DIR/assets/README.md" .
+sed -i s/TEMPLATE_PROJECT_NAME/$1/g README.md
+
 # Installing the script to remove the project
 uv add --dev toml-cli >> creation_log.txt 2>&1
 cp "$DIR/assets/nuke.sh" .
 
 # Installing the relevant example for the chosed viewer
-echo_info "Installing example file using $3"
+echo_info "Installing example file using $3..."
 cp "$DIR/assets/$3-example.py" example.py
 
+echo_info "...ALL DONE!"
 popd > /dev/null
 set +e
