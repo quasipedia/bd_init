@@ -176,6 +176,10 @@ sed -i s/TEMPLATE_PROJECT_NAME/"$project_name"/g README.md
 uv add --dev toml-cli >> creation_log.txt 2>&1
 cp "$DIR/assets/nuke.sh" .
 
+# Creating the project directories
+echo_info "Creating project directories..."
+mkdir build
+
 # Installing the relevant example for the chosed viewer
 echo_info "Installing example file using $viewer..."
 cp "$DIR/assets/$viewer-example.py" example.py
