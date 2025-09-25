@@ -7,6 +7,7 @@ https://github.com/user-attachments/assets/dd4bc28a-c479-4495-94d4-2e806d853122
 
 ## Dependencies
 **The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system.**
+Additionally, if you are going to build your package (for example because it is a library) you _optionally may_ install `uv_build` for a faster, more integrated building experience, but this is not necessary.
 The other dependencies of the script are typically installed by default in any modern GNU/Linux distribution, some of them are:
 - `bash`
 - `curl`
@@ -17,11 +18,13 @@ The other dependencies of the script are typically installed by default in any m
 
 
 ## Installation
-The recommended way to install the script is to clone the repository where you keep your code and **either**:
+The recommended way to install the script is to clone the repository somewhere fitting...
 ```sh
 ~ ❯❯❯ cd code
 ~/code ❯❯❯ git clone git@github.com:quasipedia/bd_init.git
 ```
+...and **either**...
+
 ### Option one
 If all your CAD projects share the same folder, create a symlink to `bd_init.sh` in that directory.
 ```sh
