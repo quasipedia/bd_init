@@ -22,19 +22,42 @@ Explicitly out-of-scope:
 - IDE or text editor configuration.
 
 ## Dependencies
-The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system. Other programs that are expected to be installed on the system are:
+**The script core functionality is provided by [`uv`](https://github.com/astral-sh/uv), so you _must_ have `uv` installed on your system.**
+
+The other dependencies of the script are typically installed by default in any modern GNU/Linux distribution, some of them are:
 - `bash`
 - `curl`
 - `cut`
 - `jq`
 - `readlink`
 - `sed`
-These are typically installed by default in any modern GNU/Linux distribution.
+
+## Installation
+The recommended way to install the script is to clone the repository where you keep your code and **either**:
+
+```sh
+~ ❯❯❯ cd code
+~/code ❯❯❯ git clone git@github.com:quasipedia/bd_init.git
+```
+
+### Option one
+If all your CAD projects share the same folder, create a symlink to `bd_init.sh` in that directory.
+
+```sh
+~/cad_projects ❯❯❯ ln -s ~/code/bd_init/bd_init.sh
+```
+
+### Option two
+If you need or prefer to be able to invoke the script from anywhere in your system, append the cloned directory to your system `$PATH` by adding to your shell initialisation script (e.g.: `~/.bashrc` or `~/.zshrc`) the following line:
+
+```sh
+export PATH="~/code/bd_init:$PATH"
+``
 
 ## Usage
 The format for running the script is:
 
-```bash
+```sh
 ./bd_init.sh <project-name> <project-type> <preferred-viewer>
 ```
 
