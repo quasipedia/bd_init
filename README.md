@@ -61,15 +61,14 @@ bd_init lego-parts lib yacv
 
 ## Features
 The script (unchecked features are still _not_ operational) does:
-- [x] prepare an isolated enivironment for the project,
-- [x] install all dependencies (including `--dev` ones)
-- [x] take care of the directory structure
-- [x] create a relevant `.gitignore` file
-- [x] configure the varius dev tools (e.g.: `ruff`)
-- [x] creates a minimal `example.py` file tailored to your chosen CAD viewer
-- [x] install a script to completely remove the project
 - [x] notify if newer versions of `bd_script` are available
-- [x] creates ad custom `README.md` file (generic but informative)
+- [x] prepare an isolated `.venv` for the project,
+- [x] install all dependencies (including `--dev` ones)
+- [x] configure the varius dev tools (e.g.: `ruff`)
+- [x] create a relevant `.gitignore` file
+- [x] install `nuke.sh`, a script to completely purge the project from the system
+- [x] creates a custom `README.md` file (generic but informative)
+- [ ] creates a minimal working example tailored to your chosen type of project and CAD viewer
 
 Explicitly out-of-scope:
 - IDE or text editor configuration.
