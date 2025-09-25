@@ -178,7 +178,7 @@ cp "$DIR/assets/nuke.sh" .
 
 # Creating the project directories
 echo_info "Creating project directories..."
-mkdir build
+mkdir artifacts
 
 # Installing the relevant example for the chosed viewer
 echo_info "Installing example file using $viewer..."
