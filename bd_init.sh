@@ -16,6 +16,18 @@ project_name=$1
 project_type=$2
 viewer=$3
 
+# TRANSLATE CAD NAMES TO UV INIT OPTIONS
+declare -A UV_MAPPING
+UV_MAPPING["empty"]="bare"
+UV_MAPPING["part"]="app"
+UV_MAPPING["assembly"]="package"
+UV_MAPPING["library"]="lib"
+
+# TRANSLATE VIEWER NAMES TO PYTHON MODULES
+declare -A MOD_MAPPING
+MOD_MAPPING["ocp"]="ocp_vscode"
+MOD_MAPPING["yacv"]="yacv_server"
+
 # COLOURS
 RED='\033[1;31m'
 YELLOW='\033[1;93m'
@@ -103,8 +115,9 @@ elif ! [[ $project_name =~ ^[a-z|0-9|\-]*$ ]]; then
   echo_warn "Would you like to abort and change the project name to something"
   echo_warn "containing only lowercase letters, hyphens and digits? (Y|n)"
   offer_to_abort 
-elif [ -z "$project_type" ] || ! is_valid_option "bare app package lib" "$project_type"; then
-  echo_error "Please provide the type of project (bare|app|package|lib)"
+elif [ -z "$project_type" ] || ! is_valid_option "empty part assembly library" "$project_type"; then
+  echo_error "Please provide the type of project (empty|part|assembly|library)"
+  echo_error "See documentation for details."
   exit 1
 elif [ -z "$viewer" ] || ! is_valid_option "ocp yacv" "$viewer"; then
   echo_error "Please indicate what type of viewer you would like to use (ocp|yacv)"
@@ -123,7 +136,7 @@ fi
 
 # Create the directory for the project
 echo_info "CREATING PROJECT \`$project_name\`..."
-uv init --"$project_type" "$project_name" &> creation_log_"$project_name".txt
+uv init --"${UV_MAPPING[$project_type]}" "$project_name" &> creation_log_"$project_name".txt
 mv creation_log_"$project_name".txt "$project_name"/creation_log.txt
 
 pushd "$project_name" > /dev/null
@@ -176,13 +189,14 @@ sed -i s/TEMPLATE_PROJECT_NAME/"$project_name"/g README.md
 uv add --dev toml-cli >> creation_log.txt 2>&1
 cp "$DIR/assets/nuke.sh" .
 
-# Creating the project directories
-echo_info "Creating project directories..."
-mkdir artifacts
-
-# Installing the relevant example for the chosed viewer
-echo_info "Installing example file using $viewer..."
-cp "$DIR/assets/$viewer-example.py" example.py
+# Install project template
+if ! [ "$project_type" == empty ]; then
+  # Creating the directories
+  echo_info "Installing project template..."
+  mkdir artifacts
+  cp -r "$DIR"/assets/project_templates/"$project_type"/* .
+  find . -path '*/.*' -prune -o -name "*.py" -exec sed -i s/CAD_LIBRARY/"${MOD_MAPPING[$viewer]}"/g {} \;
+fi
 
 echo_info "...ALL DONE!"
 popd > /dev/null
