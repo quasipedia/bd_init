@@ -195,7 +195,7 @@ if ! [ "$project_type" == empty ]; then
   echo_info "Installing project template..."
   mkdir artifacts
   cp -r "$DIR"/assets/project_templates/"$project_type"/* .
-  find . -path '*/.*' -prune -o -name "*.py" -exec sed -i s/CAD_LIBRARY/"${MOD_MAPPING[$viewer]}"/g {} \;
+  find . -path '*/.*' -prune -o -name "*.py" -exec sed -i s/VIEWER_LIBRARY/"${MOD_MAPPING[$viewer]}"/g {} \;
 fi
 
 echo_info "...ALL DONE!"

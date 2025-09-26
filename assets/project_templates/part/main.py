@@ -1,5 +1,5 @@
 from build123d import *
-from CAD_LIBRARY import show
+from VIEWER_LIBRARY import show
 
 L, w, t, b, h, n = 60.0, 18.0, 9.0, 0.9, 90.0, 6.0
 
