@@ -20,3 +20,4 @@ with BuildPart() as bottle:
     offset(bottle.solids()[0], amount=-b, openings=necktopf)
 
 show(bottle)
+export_step(bottle.part, "artifacts/bottle.step")
