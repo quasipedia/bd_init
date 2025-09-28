@@ -1,6 +1,7 @@
 ### From the initialising script
 creation_log.txt
 nuke.sh
+artifacts/
 
 ### From GitHub's python.gitignore
 # Byte-compiled / optimized / DLL files
