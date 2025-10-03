@@ -105,6 +105,8 @@ if [ -z "$project_name" ]; then
   echo_error "Please provide the name of the project"
   exit 1
 elif ! [[ $project_name =~ ^[a-z|0-9|\-]*$ ]]; then
+  # TODO: Make this compliant wiht:
+  # https://packaging.python.org/en/latest/specifications/name-normalization/#name-normalization
   echo_warn "Potentially problematic project name!"
   echo "Some tooling in the python ecosystem treat letter casing and some"
   echo "some other characters like underscores and spaces in special ways."
@@ -190,11 +192,16 @@ uv add --dev toml-cli >> creation_log.txt 2>&1
 cp "$DIR/assets/nuke.sh" .
 
 # Install project template
-if ! [ "$project_type" == empty ]; then
+if ! [ "$project_type" == "empty" ]; then
   # Creating the directories
   echo_info "Installing project template..."
   mkdir artifacts
-  cp -r "$DIR"/assets/project_templates/"$project_type"/* .
+  if [ "$project_type" == "part" ]; then
+    cp -r "$DIR"/assets/project_templates/"$project_type"/* .
+  else
+    mkdir -p src/"$project_name"
+    cp -r "$DIR"/assets/project_templates/"$project_type"/* ./src/"$project_name"/
+  fi
   find . -path '*/.*' -prune -o -name "*.py" -exec sed -i s/VIEWER_LIBRARY/"${MOD_MAPPING[$viewer]}"/g {} \;
 fi
 
