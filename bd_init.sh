@@ -12,7 +12,7 @@ set -e
 # #############################################################################
 
 # USE NAMED VARIABLES
-project_name=$1
+typed_project_name=$1
 project_type=$2
 viewer=$3
 
@@ -101,21 +101,22 @@ if ! [ "$bd_init_latest" == "$bd_init_current" ]; then
 fi
 
 # Validate parameters
-if [ -z "$project_name" ]; then
+project_name=$(echo "$typed_project_name" | sed 's/[._-]\+/-/g' | tr '[:upper:]' '[:lower:]')
+package_name=${project_name//-/_}
+if [ -z "$typed_project_name" ]; then
   echo_error "Please provide the name of the project"
   exit 1
-elif ! [[ $project_name =~ ^[a-z|0-9|\-]*$ ]]; then
-  # TODO: Make this compliant wiht:
-  # https://packaging.python.org/en/latest/specifications/name-normalization/#name-normalization
-  echo_warn "Potentially problematic project name!"
-  echo "Some tooling in the python ecosystem treat letter casing and some"
-  echo "some other characters like underscores and spaces in special ways."
-  echo "For example sometimes spaces and underscores get silently converted"
-  echo "to hyphens. This is not a problem if you only work locally, but can"
-  echo "become a problem when sharing a codebase with others."
-  echo ""
-  echo_warn "Would you like to abort and change the project name to something"
-  echo_warn "containing only lowercase letters, hyphens and digits? (Y|n)"
+elif ! [[ "$typed_project_name" =~ ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9])$ ]]; then
+  echo_error "\"$typed_project_name\" is not a valid project name!"
+  echo "According to Python specifications, project names should only contain"
+  echo "letters, underscores, hyphens or dots (and start with either a letter)"
+  echo "or a number. Furthermore \`bd_init\` will normalise the name as per specifications"
+  echo "https://packaging.python.org/en/latest/specifications/name-normalization/#name-normalization"
+  exit 1
+elif ! [ "$typed_project_name" == "$project_name" ]; then
+  echo_warn "The project name will be normalised:"
+  echo_warn "    $typed_project_name →  $project_name"
+  echo_warn "Would you prefer to abort instead? (Y|n)"
   offer_to_abort 
 elif [ -z "$project_type" ] || ! is_valid_option "empty part assembly library" "$project_type"; then
   echo_error "Please provide the type of project (empty|part|assembly|library)"
@@ -125,6 +126,7 @@ elif [ -z "$viewer" ] || ! is_valid_option "ocp yacv" "$viewer"; then
   echo_error "Please indicate what type of viewer you would like to use (ocp|yacv)"
   exit 1
 fi
+
 
 # Clash prevention (with existing project)
 if [ -d "$project_name" ]; then
@@ -199,8 +201,9 @@ if ! [ "$project_type" == "empty" ]; then
   if [ "$project_type" == "part" ]; then
     cp -r "$DIR"/assets/project_templates/"$project_type"/* .
   else
-    mkdir -p src/"$project_name"
-    cp -r "$DIR"/assets/project_templates/"$project_type"/* ./src/"$project_name"/
+    rm -rf src/  # Cleanup whatever uv may have done
+    mkdir -p src/"$package_name"
+    cp -r "$DIR"/assets/project_templates/"$project_type"/* ./src/"$package_name"/
   fi
   find . -path '*/.*' -prune -o -name "*.py" -exec sed -i s/VIEWER_LIBRARY/"${MOD_MAPPING[$viewer]}"/g {} \;
 fi

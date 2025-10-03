@@ -72,6 +72,11 @@ The script (unchecked features are still _not_ operational) does:
 - [x] install `nuke.sh`, a script to completely purge the project from the system
 - [x] creates a custom `README.md` file (generic but informative)
 - [ ] creates a minimal working example tailored to your chosen type of project and CAD viewer
+  - [x] EMPTY
+  - [x] PART
+  - [x] ASSEMBLY
+  - [ ] LIBRARY (coming soon)
+    
 
 Explicitly out-of-scope:
 - IDE or text editor configuration.
