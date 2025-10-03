@@ -43,7 +43,5 @@ class Beam(BasePartObject):
 
 if __name__ == "__main__":
     from VIEWER_LIBRARY import show
-
     beam = Beam(100)
-    face = beam.faces().sort_by(SortBy.AREA)[:3].sort_by(Axis.Z)[0]
-    show(face, beam)
+    show(beam)

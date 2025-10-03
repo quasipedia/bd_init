@@ -32,6 +32,5 @@ class Pole(BasePartObject):
 
 if __name__ == "__main__":
     from VIEWER_LIBRARY import show
-
     pole = Pole(100)
-    show(pole, render_joints=True)
+    show(pole)
