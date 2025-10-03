@@ -208,6 +208,14 @@ if ! [ "$project_type" == "empty" ]; then
   find . -path '*/.*' -prune -o -name "*.py" -exec sed -i s/VIEWER_LIBRARY/"${MOD_MAPPING[$viewer]}"/g {} \;
 fi
 
+# pyproject.toml
+echo_info "Updating project metadata..."
+sed -i s/Add[[:space:]]your[[:space:]]description[[:space:]]here/A\ CAD\ code\ project\ based\ on\ build123d/g pyproject.toml
+if [ "$project_type" == "assembly" ]; then
+  sed_pattern="/\[project.scripts\]/{n;s/.*/$project_name = \"$package_name:assembly.assemble\"/}"
+  sed -i "$sed_pattern" pyproject.toml
+fi
+
 echo_info "...ALL DONE!"
 popd > /dev/null
 set +e
