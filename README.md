@@ -15,6 +15,7 @@ The other dependencies of the script are typically installed by default in any m
 - `jq`
 - `readlink`
 - `sed`
+- `envsubst`
 
 
 ## Installation

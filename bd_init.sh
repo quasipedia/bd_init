@@ -188,6 +188,9 @@ sed -i s/TEMPLATE_PYTHON_VERSION/"$python_version"/g pyrightconfig.json
 echo_info "Generating custom README file..."
 cp "$DIR/assets/README.md" .
 sed -i s/TEMPLATE_PROJECT_NAME/"$project_name"/g README.md
+sed -i s/TEMPLATE_PACKAGE_NAME/"$package_name"/g README.md
+tmp=$(TEMPLATE_VIEWER_INSTRUCTIONS=$(cat "$DIR/assets/$viewer-readme.md") envsubst < README.md)
+echo "$tmp" > README.md
 
 # Installing the script to remove the project
 uv add --dev toml-cli >> creation_log.txt 2>&1
